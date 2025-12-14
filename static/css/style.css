@@ -1,0 +1,1378 @@
+/* 修复数学公式和字体显示问题 */
+:root {
+    --primary-color: #4f46e5;
+    --primary-light: #818cf8;
+    --primary-dark: #3730a3;
+    --secondary-color: #10b981;
+    --secondary-light: #34d399;
+    --danger-color: #ef4444;
+    --warning-color: #f59e0b;
+    --success-color: #10b981;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-400: #9ca3af;
+    --gray-500: #6b7280;
+    --gray-600: #4b5563;
+    --gray-700: #374151;
+    --gray-800: #1f2937;
+    --gray-900: #111827;
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --radius-sm: 0.375rem;
+    --radius: 0.5rem;
+    --radius-md: 0.75rem;
+    --radius-lg: 1rem;
+    --radius-xl: 1.5rem;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    background-color: var(--gray-50);
+    color: var(--gray-800);
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+.app-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* 顶部导航栏 */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 0;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.logo-icon {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.25rem;
+}
+
+.logo-text h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--gray-900);
+    line-height: 1.2;
+}
+
+.logo-text p {
+    font-size: 0.875rem;
+    color: var(--gray-500);
+}
+
+.nav-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+/* 按钮样式 */
+.btn {
+    padding: 0.625rem 1.25rem;
+    border-radius: var(--radius);
+    border: none;
+    font-weight: 500;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-secondary {
+    background-color: var(--gray-100);
+    color: var(--gray-700);
+}
+
+.btn-secondary:hover {
+    background-color: var(--gray-200);
+}
+
+.btn-success {
+    background-color: var(--success-color);
+    color: white;
+}
+
+.btn-danger {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+.btn-outline {
+    background-color: transparent;
+    border: 1px solid var(--gray-300);
+    color: var(--gray-700);
+}
+
+.btn-outline:hover {
+    background-color: var(--gray-50);
+}
+
+.btn-icon {
+    padding: 0.5rem;
+    border-radius: var(--radius);
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 主要内容布局 */
+.main-content {
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    gap: 2rem;
+    flex: 1;
+    margin-bottom: 2rem;
+    transition: all 0.3s ease;
+    min-width: 0;
+}
+
+.main-content.sidebar-collapsed {
+    grid-template-columns: 1fr;  /* 只有一列，让右侧面板占满 */
+}
+
+@media (max-width: 1024px) {
+    .main-content {
+        grid-template-columns: 1fr;
+    }
+
+    .main-content.sidebar-collapsed {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* 左侧面板 */
+.left-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    min-width: 0;
+}
+
+.sidebar {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+}
+
+.sidebar.collapsed {
+    width: 0;
+    padding: 0;
+    margin: 0;
+    opacity: 0;
+    visibility: hidden; /* 使用 visibility 替代 display */
+    transform: translateX(-100%);
+    position: absolute; /* 从文档流中移除 */
+}
+
+.main-content.sidebar-collapsed .left-panel {
+    display: none;
+}
+
+
+/* 右侧面板 */
+.right-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    min-width: 0;
+}
+
+.main-content.sidebar-collapsed .right-panel {
+    grid-column: 1; /* 在单列布局中占据第一列 */
+    width: 100%;
+    max-width: 100%;
+}
+
+/* 修改闪卡在侧边栏隐藏时的最大宽度 */
+.main-content.sidebar-collapsed .flashcard {
+    max-width: 100%; /* 允许扩展到容器宽度 */
+}
+
+/* 修改评分按钮容器在侧边栏隐藏时的宽度 */
+.main-content.sidebar-collapsed .rating-buttons {
+    max-width: 100%; /* 扩展到全宽 */
+}
+
+/* 修改进度条容器在侧边栏隐藏时的宽度 */
+.main-content.sidebar-collapsed .progress-container {
+    max-width: 100%;
+}
+
+/* 修改卡片库容器在侧边栏隐藏时的样式 */
+.main-content.sidebar-collapsed .categories-container {
+    max-height: 500px; /* 增加最大高度 */
+}
+
+/* 修复右侧面板内部卡片的内边距 */
+.main-content.sidebar-collapsed .right-panel .card {
+    padding: 1.25rem; /* 稍微减少内边距 */
+}
+
+
+/* 浮动按钮 */
+.floating-btn {
+    position: fixed;
+    bottom: 2rem;
+    left: 2rem;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+    color: white;
+    border: none;
+    box-shadow: var(--shadow-lg);
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    transition: all 0.3s ease;
+}
+
+.main-content.sidebar-collapsed + .floating-btn {
+    display: flex;
+}
+
+
+.floating-btn:hover {
+    transform: scale(1.1);
+    box-shadow: var(--shadow-xl);
+}
+
+.floating-btn .floating-tooltip {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--gray-800);
+    color: white;
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--radius);
+    font-size: 0.75rem;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    margin-bottom: 0.5rem;
+}
+
+.floating-btn:hover .floating-tooltip {
+    opacity: 1;
+}
+
+@media (max-width: 1024px) {
+    .floating-btn {
+        display: flex;
+    }
+}
+
+/* 侧边栏切换按钮的动画 */
+#sidebar-toggle i {
+    transition: transform 0.3s ease;
+}
+
+#sidebar-toggle.collapsed i {
+    transform: rotate(90deg);
+}
+
+/* 卡片通用样式 */
+.card {
+    background-color: white;
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--gray-100);
+}
+
+.card-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--gray-900);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* 统计卡片 */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    border-radius: var(--radius);
+    background-color: var(--gray-50);
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--gray-900);
+    line-height: 1.2;
+}
+
+.stat-label {
+    font-size: 0.75rem;
+    color: var(--gray-500);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-top: 0.25rem;
+}
+
+/* 闪卡复习区域 */
+.flashcard-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 500px;
+    padding: 2rem;
+    border-radius: var(--radius-lg);
+    background: linear-gradient(135deg, #f3f4ff 0%, #f0f1ff 100%);
+    border: 1px solid var(--gray-200);
+    position: relative;
+}
+
+.flashcard {
+  width: 100%;
+  max-width: 800px;
+  min-height: 400px;
+  perspective: 1200px;
+  cursor: pointer;
+  display: flex;
+  align-items: stretch;
+  box-sizing: border-box;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-all;
+}
+
+.flashcard-inner {
+  position: relative;
+  width: 100%;
+  transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transform-style: preserve-3d;
+}
+
+/* 3. 最终文本层：清除默认边距，确保居中无偏移 */
+.content-inner p {
+  margin: 0;
+  padding: 0.5rem;
+}
+
+.flashcard.flipped .flashcard-inner {
+    transform: rotateY(180deg);
+}
+
+/* 正面和背面基础样式 */
+.flashcard-front, .flashcard-back {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+/* 正面样式 */
+.flashcard-front {
+    background-color: white;
+    color: var(--gray-900);
+    z-index: 2;
+}
+
+/* 背面样式 */
+.flashcard-back {
+    background-color: white;
+    color: var(--gray-900);
+    transform: rotateY(180deg);
+    border: 2px solid var(--primary-light);
+}
+
+/* 2. 文本核心容器：确保文本本身居中 */
+.card-content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* 修复KaTeX和字体冲突 */
+.card-content .content-inner {
+    font-family: inherit !important;
+    font-size: clamp(1.2rem, 3.5vw, 2.5rem);
+    line-height: 1.6;
+    color: var(--gray-900) !important;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
+}
+
+/* 确保KaTeX公式正确显示 */
+.card-content .katex,
+.card-content .katex-display {
+    font-family: KaTeX_Main, 'Times New Roman', serif !important;
+    color: var(--gray-900) !important;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.card-content .katex-display {
+    margin: 1rem 0;
+}
+
+/* 防止数学公式覆盖文本样式 */
+.card-content .katex * {
+    font-family: inherit !important;
+}
+
+/* 自适应字体大小逻辑 */
+.card-content.large-text .content-inner {
+    font-size: clamp(1.5rem, 4vw, 3rem);
+}
+
+.card-content.medium-text .content-inner {
+    font-size: clamp(1.2rem, 3vw, 2rem);
+}
+
+.card-content.small-text .content-inner {
+    font-size: clamp(1rem, 2.5vw, 1.5rem);
+}
+
+/* 纯文本内容（无Markdown）的样式 */
+.plain-text-content {
+    font-family: inherit;
+    font-size: inherit;
+    line-height: 1.6;
+    color: var(--gray-900);
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+/* Markdown内容样式 */
+.markdown-content h1,
+.markdown-content h2,
+.markdown-content h3 {
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    color: var(--gray-900);
+    font-family: inherit;
+}
+
+.markdown-content p {
+    margin-bottom: 1rem;
+    font-family: inherit;
+}
+
+.markdown-content ul,
+.markdown-content ol {
+    margin-left: 1.5rem;
+    margin-bottom: 1rem;
+    font-family: inherit;
+}
+
+.markdown-content code {
+    background-color: var(--gray-100);
+    padding: 0.2rem 0.4rem;
+    border-radius: var(--radius-sm);
+    font-family: 'Courier New', monospace;
+    color: var(--gray-800);
+}
+
+.markdown-content pre {
+    background-color: var(--gray-100);
+    padding: 1rem;
+    border-radius: var(--radius);
+    overflow-x: auto;
+    margin-bottom: 1rem;
+    color: var(--gray-800);
+}
+
+.markdown-content blockquote {
+    border-left: 4px solid var(--primary-light);
+    padding-left: 1rem;
+    margin-left: 0;
+    margin-bottom: 1rem;
+    color: var(--gray-600);
+}
+
+/* 修复数学公式样式冲突 */
+.math-container {
+    margin: 1rem 0;
+    overflow-x: auto;
+    max-width: 100%;
+    text-align: center;
+}
+
+.math-container.math-block {
+    display: block;
+    margin: 1.5rem 0;
+}
+
+.math-inline {
+    display: inline-block;
+    margin: 0 0.2rem;
+}
+
+/* 防止KaTeX覆盖其他样式 */
+.katex, .katex-display {
+    font-family: KaTeX_Main, 'Times New Roman', serif !important;
+}
+
+.katex-display {
+    margin: 0 !important;
+    text-align: center;
+}
+
+.katex-display > .katex {
+    text-align: center;
+}
+
+/* 数学公式错误样式 */
+.math-error {
+    color: var(--danger-color);
+    background-color: #fee2e2;
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--radius-sm);
+    font-family: monospace;
+    font-size: 0.875rem;
+}
+
+/* 预览区域的数学公式样式 */
+.markdown-preview .math-container {
+    margin: 0.5rem 0;
+}
+
+.markdown-preview .katex-display {
+    margin: 0.5rem 0 !important;
+}
+
+.card-category {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background-color: var(--primary-light);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--radius);
+    font-size: 0.75rem;
+    font-weight: 500;
+    z-index: 10;
+}
+
+.card-hint {
+    position: absolute;
+    bottom: 1rem;
+    left: 0;
+    right: 0;
+    text-align: center;
+    color: var(--gray-500);
+    font-size: 0.875rem;
+    font-family: inherit;
+}
+
+/* 评分按钮 */
+.rating-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 2rem;
+    width: 100%;
+    max-width: 800px;
+}
+
+/* 三个评分按钮的布局 */
+.rating-btn {
+    flex: 1;
+    padding: 1rem 1.5rem;
+    border-radius: var(--radius);
+    border: none;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    max-width: 180px;
+    min-width: 120px;
+}
+
+/* 三个按钮的颜色样式 */
+.rating-btn-forget {
+    background-color: #fee2e2;
+    color: #dc2626;
+    border: 2px solid #fca5a5;
+}
+
+.rating-btn-forget:hover {
+    background-color: #fecaca;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2);
+}
+
+.rating-btn-blur {
+    background-color: #fef3c7;
+    color: #d97706;
+    border: 2px solid #fbbf24;
+}
+
+.rating-btn-blur:hover {
+    background-color: #fde68a;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(217, 119, 6, 0.2);
+}
+
+.rating-btn-remember {
+    background-color: #dcfce7;
+    color: #16a34a;
+    border: 2px solid #86efac;
+}
+
+.rating-btn-remember:hover {
+    background-color: #bbf7d0;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(22, 163, 74, 0.2);
+}
+
+/* 评分标签和图标 */
+.rating-label {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.rating-icon {
+    font-size: 1.5rem;
+}
+
+/* 移动端调整 */
+@media (max-width: 768px) {
+    .rating-buttons {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .rating-btn {
+        flex: 1;
+        max-width: 100%;
+        min-width: 0;
+        flex-direction: row;
+        justify-content: center;
+        gap: 0.75rem;
+    }
+
+    .rating-label {
+        font-size: 0.9rem;
+    }
+
+    .rating-icon {
+        font-size: 1.25rem;
+    }
+}
+
+/* 复习模式选择样式 */
+.review-mode-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin: 1.5rem 0;
+}
+
+.review-mode-option {
+    padding: 1rem;
+    border: 2px solid var(--gray-300);
+    border-radius: var(--radius);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.review-mode-option:hover {
+    border-color: var(--primary-light);
+    background-color: var(--gray-50);
+}
+
+.review-mode-option.selected {
+    border-color: var(--primary-color);
+    background-color: rgba(79, 70, 229, 0.05);
+}
+
+.mode-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--gray-100);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-color);
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+
+.mode-info {
+    flex: 1;
+}
+
+.mode-info h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--gray-900);
+    margin-bottom: 0.25rem;
+}
+
+.mode-info p {
+    font-size: 0.875rem;
+    color: var(--gray-500);
+}
+
+.mode-check {
+    color: var(--primary-color);
+    font-size: 1.25rem;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.review-mode-option.selected .mode-check {
+    opacity: 1;
+}
+
+/* 主动复习模式指示器 */
+#review-mode-indicator {
+    text-align: center;
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    background: linear-gradient(135deg, #e0e7ff, #c7d2fe);
+    border-radius: var(--radius);
+    color: var(--primary-dark);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+/* 复习控制面板 */
+.review-control-panel {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1rem;
+    padding: 1rem;
+    background-color: var(--gray-50);
+    border-radius: var(--radius);
+}
+
+.review-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.review-controls {
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* 主动复习模式下的进度条 */
+.custom-review-progress {
+    margin-top: 1rem;
+    width: 100%;
+}
+
+.custom-review-progress .progress-text {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--gray-600);
+}
+
+/* 进度条 */
+.progress-container {
+    margin-top: 2rem;
+    width: 100%;
+    max-width: 800px;
+}
+
+.progress-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+}
+
+.progress-bar {
+    height: 8px;
+    background-color: var(--gray-200);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4f46e5, #8b5cf6);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+/* 表单样式 */
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+.form-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--gray-700);
+    margin-bottom: 0.5rem;
+}
+
+.form-input, .form-textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--gray-300);
+    font-size: 0.875rem;
+    transition: border-color 0.2s ease;
+}
+
+.form-input:focus, .form-textarea:focus {
+    outline: none;
+    border-color: var(--primary-light);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+.form-textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+/* 卡片库分类视图 */
+.categories-container {
+    max-height: 600px;
+    overflow-y: auto;
+    padding-right: 0.5rem;
+    min-width: 0;
+}
+
+.categories-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.categories-container::-webkit-scrollbar-track {
+    background: var(--gray-100);
+    border-radius: 3px;
+}
+
+.categories-container::-webkit-scrollbar-thumb {
+    background: var(--gray-300);
+    border-radius: 3px;
+}
+
+.category-item {
+    margin-bottom: 1rem;
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid var(--gray-200);
+    background-color: white;
+}
+
+.category-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background-color: var(--gray-50);
+    cursor: pointer;
+    border-bottom: 1px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.category-header:hover {
+    background-color: var(--gray-100);
+}
+
+.category-header.active {
+    border-bottom-color: var(--gray-200);
+    background-color: white;
+}
+
+.category-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 600;
+    color: var(--gray-800);
+}
+
+.category-icon {
+    color: var(--primary-color);
+    font-size: 1.1rem;
+    transition: transform 0.3s ease;
+}
+
+.category-header.active .category-icon {
+    transform: rotate(90deg);
+}
+
+.category-count {
+    background-color: var(--gray-200);
+    color: var(--gray-700);
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.category-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.category-cards {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    background-color: var(--gray-50);
+    min-width: 0;
+}
+
+.category-cards.expanded {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+/* 卡片列表项 */
+.card-list-item {
+    padding: 1rem;
+    border-bottom: 1px solid var(--gray-200);
+    background-color: white;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.card-list-item:last-child {
+    border-bottom: none;
+}
+
+.card-list-item:hover {
+    background-color: var(--gray-50);
+}
+
+.card-list-checkbox {
+    flex-shrink: 0;
+}
+
+.card-list-content {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.card-list-front {
+    flex: 1;
+    min-width: 0;
+    font-weight: 500;
+    color: var(--gray-900);
+    margin-bottom: 0.25rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card-list-back {
+    flex: 1;
+    min-width: 0;
+    font-size: 0.875rem;
+    color: var(--gray-600);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card-list-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.75rem;
+    color: var(--gray-500);
+    margin-top: 0.5rem;
+}
+
+.card-list-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-shrink: 0;
+}
+
+/* 卡片选择状态 */
+.card-list-item.selected {
+    background-color: rgba(79, 70, 229, 0.05);
+    border-left: 3px solid var(--primary-color);
+}
+
+/* 主动复习按钮 */
+.review-selected-container {
+    margin-top: 1rem;
+    padding: 1rem;
+    background-color: var(--gray-50);
+    border-radius: var(--radius);
+    border: 1px solid var(--gray-200);
+}
+
+.selected-count {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+/* 导入导出模态框样式 */
+.export-options {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.export-option {
+    padding: 1.5rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--gray-300);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.export-option:hover {
+    border-color: var(--primary-color);
+    background-color: var(--gray-50);
+}
+
+.export-icon {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    background-color: var(--gray-100);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.75rem;
+    color: var(--gray-600);
+    font-size: 1.25rem;
+}
+
+.format-help {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background-color: var(--gray-50);
+    border-radius: var(--radius);
+    border: 1px solid var(--gray-200);
+}
+
+.format-help h4 {
+    margin-bottom: 0.5rem;
+    color: var(--gray-800);
+}
+
+.format-help ul {
+    padding-left: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.format-help li {
+    margin-bottom: 0.25rem;
+    font-size: 0.875rem;
+    color: var(--gray-600);
+}
+
+/* 空状态 */
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 2rem;
+    text-align: center;
+    color: var(--gray-500);
+}
+
+.empty-state-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: var(--gray-300);
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .nav-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .export-options {
+        grid-template-columns: 1fr;
+    }
+
+    .card-list-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .card-list-actions {
+        align-self: flex-end;
+    }
+
+    /* 移动端闪卡调整 */
+    .flashcard {
+        min-height: 350px;
+    }
+
+    .flashcard-front, .flashcard-back {
+        padding: 1.5rem;
+    }
+
+    .card-content {
+        padding: 1rem;
+    }
+
+    /* 移动端分类卡片调整 */
+    .category-cards.expanded {
+        max-height: 300px;
+    }
+}
+
+/* 动画 */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease forwards;
+}
+
+/* 模态框 */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+}
+
+.modal-content {
+    background-color: white;
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    max-width: 800px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: var(--shadow-xl);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.modal-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--gray-900);
+}
+
+/* 实用类 */
+.hidden {
+    display: none !important;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.mt-1 { margin-top: 0.5rem; }
+.mt-2 { margin-top: 1rem; }
+.mt-3 { margin-top: 1.5rem; }
+.mb-1 { margin-bottom: 0.5rem; }
+.mb-2 { margin-bottom: 1rem; }
+.mb-3 { margin-bottom: 1.5rem; }
+
+/* 标记预览 */
+.markdown-preview {
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius);
+    padding: 1rem;
+    background-color: var(--gray-50);
+    max-height: 200px;
+    overflow-y: auto;
+    margin-top: 0.5rem;
+    font-family: inherit;
+}
+
+.markdown-preview h1,
+.markdown-preview h2,
+.markdown-preview h3 {
+    margin-top: 0.5rem;
+    margin-bottom: 0.25rem;
+    font-family: inherit;
+}
+
+.markdown-preview p {
+    margin-bottom: 0.5rem;
+    font-family: inherit;
+}
+
+/* 防止数学公式覆盖预览样式 */
+.markdown-preview .katex,
+.markdown-preview .katex-display {
+    font-family: KaTeX_Main, 'Times New Roman', serif !important;
+}
+
+/* 错误提示样式 */
+.error-container {
+    background-color: #fee2e2;
+    border: 1px solid #ef4444;
+    border-radius: var(--radius);
+    padding: 1rem;
+    margin: 1rem 0;
+    color: #991b1b;
+}
+
+.error-container h4 {
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+}
+
+/* 调试模式样式 */
+.debug-info {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    z-index: 9999;
+}
+
+/* 修复评分按钮在侧边栏隐藏时的布局 */
+@media (min-width: 769px) {
+    .main-content.sidebar-collapsed .rating-buttons {
+        max-width: 600px; /* 设置一个合理的最大宽度 */
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .main-content.sidebar-collapsed .flashcard {
+        max-width: 700px; /* 设置一个合理的最大宽度 */
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
